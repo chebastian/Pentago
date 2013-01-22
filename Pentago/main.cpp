@@ -27,6 +27,47 @@ struct Buffer
 	char Message[256];
 };
 
+struct testBuffer
+{
+	std::string ID; 
+	std::string Msg;
+};
+
+void itShouldReceiveAndSendMessagesToClient(int id)
+{
+	testBuffer bufSend;
+	char* rcvMsg;
+	char* csend = new char[sizeof(testBuffer)];
+	ZeroMemory(csend,sizeof(testBuffer));
+
+	rcvMsg = new char[sizeof(testBuffer)];
+	ZeroMemory(rcvMsg,sizeof(testBuffer));
+
+	while(true)
+	{
+		if(recv(Connections[id],rcvMsg,sizeof(testBuffer),NULL))
+		{
+			bufSend.ID = id;
+			memcpy((void*)(bufSend.Msg.c_str()),rcvMsg,sizeof(rcvMsg));
+			memcpy(csend,&bufSend,sizeof(bufSend));
+			std::cout << "sending to client" << std::endl;
+
+			for(int a = 0; a != ConCounter; a++)
+			{
+				if(Connections[a] == Connections[id])
+				{
+
+				}
+				else
+				{
+					send(Connections[a], csend, sizeof(Buffer), NULL);
+				}
+			}
+			ZeroMemory(rcvMsg, 256);
+		}
+	}
+}
+
 int ServerThread(int ID)
 {
 	Buffer sbuffer;
@@ -42,11 +83,13 @@ int ServerThread(int ID)
 	for(;; Sleep(10))
 	{
 		// Same here!
+		std::cout << "waiting for messages" << std::endl;
 		if(recv(Connections[ID], Recv, 256, NULL))
 		{
 			sbuffer.ID = ID;
 			memcpy(sbuffer.Message, Recv, 256);
 			memcpy(Send, &sbuffer, sizeof(Buffer));
+			std::cout << "Sending msg to clients" << std::endl;
 
 			for(int a = 0; a != ConCounter; a++)
 			{
@@ -112,8 +155,8 @@ int main()
 			send(Connections[ConCounter], ID, sizeof(ID), NULL);
 
 			ConCounter = ConCounter + 1;
-			std::cout << "new client connected" << std::endl;
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) ServerThread, (LPVOID)(ConCounter - 1), NULL, NULL);
+			std::cout << "new client connected: " << ID << std::endl;
+			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) itShouldReceiveAndSendMessagesToClient, (LPVOID)(ConCounter - 1), NULL, NULL);
 		}
 	}
 
