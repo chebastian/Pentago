@@ -1,13 +1,28 @@
-﻿Build started 1/22/2013 9:29:36 PM.
+﻿Build started 1/24/2013 10:03:35 PM.
      1>Project "C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\PentagoClient\PentagoClient.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I../PentagoClient/include /ZI /nologo /W4 /WX /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ClientBase.cpp JoinServerState.cpp MenuState.cpp PentagoBase.cpp main.cpp
+         ClientBase.cpp
+         Generating Code...
+         Compiling...
+         JoinServerState.cpp
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         PentagoBase.cpp
          main.cpp
+         MenuState.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.lib" /MACHINE:X86 Debug\main.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.exe" /INCREMENTAL /NOLOGO /LIBPATH:../PentagoClient/lib/x86/ SDL.lib SDLmain.lib SDL_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.lib" /MACHINE:X86 Debug\ClientBase.obj
+         Debug\Entity.obj
+         Debug\InputManager.obj
+         Debug\JoinServerState.obj
+         Debug\main.obj
+         Debug\MenuState.obj
+         Debug\PentagoBase.obj
+         Debug\SDLWrapper.obj
          PentagoClient.vcxproj -> C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\Debug\PentagoClient.exe
      1>Done Building Project "C:\Users\Sebastian\documents\visual studio 2012\Projects\Pentago\PentagoClient\PentagoClient.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:07.82
+Time Elapsed 00:00:06.08

@@ -6,6 +6,7 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #include <iostream>
+#include "SimpleServer.h"
 
 using namespace std;
 
@@ -121,7 +122,38 @@ int InitWinSock()
 
 int main()
 {
-	int RetVal = 0;
+	SimpleServer simpleServer = SimpleServer("127.0.0.1");
+	simpleServer.initWinSock();
+	simpleServer.setupSockets();
+	const int FIRST_THREAD = 1;
+
+	while(true)
+	{
+		if(simpleServer.listenForNewConnection())
+		{
+			std::cout << "Waiting..." << std::endl;
+
+			if(simpleServer.hasClients())
+			{
+				std::cout << "Starting first thread" << std::endl;
+				simpleServer.startServerThread();
+			}
+		}
+
+		/*if(simpleServer.hasClients())
+		{
+			std::string msg = std::string("");
+			char* cmsg = new char[256];
+			std::cin >> cmsg;
+
+			msg.append(cmsg);
+			simpleServer.sendMessageToClients(msg);
+			delete[] cmsg;
+		}*/
+
+	}
+
+	/*int RetVal = 0;
 	RetVal = InitWinSock();
 	if(RetVal != 0)
 	{
@@ -159,6 +191,6 @@ int main()
 			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) itShouldReceiveAndSendMessagesToClient, (LPVOID)(ConCounter - 1), NULL, NULL);
 		}
 	}
-
+	*/
 	return 0;
 }

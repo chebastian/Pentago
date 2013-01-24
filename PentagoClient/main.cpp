@@ -1,9 +1,13 @@
 #pragma comment(lib, "Ws2_32.lib")
+#pragma warning( disable : 4100 )
 
 #include <WinSock2.h>
 #include <Windows.h>
 #include <iostream>
 #include <sstream>
+#include "ClientBase.h"
+//#include "SDLWrapper.h"
+#include "PentagoBase.h"
 
 using namespace std;
 
@@ -12,43 +16,10 @@ SOCKADDR_IN addr;
 
 SOCKET sConnect;
 
-// For this we need to send two information at one time:
-// 1. The main message
-// 2. The ID
 
-// To send more than one information I will use a struct
-struct Buffer
+int main(int *argc, char* argv[])
 {
-	int ID;
-	char Message[256];
-};
-
-int ClientThread()
-{
-	Buffer sbuffer;
-	char buffer[sizeof(sbuffer)] = {0};
-
-	for(;; Sleep(10))
-	{
-		// The server will send a struct to the client
-		// containing message and ID
-		// But send only accepts a char as buffer parameter
-		// so here we need to recv a char buffer and then
-		// we copy the content of this buffer to our struct
-		if(recv(sConnect, buffer, sizeof(sbuffer), NULL))
-		{
-			int test = 0;
-			memcpy(&sbuffer, buffer, sizeof(sbuffer));
-			cout << "<Client " << sbuffer.ID << ":> " << sbuffer.Message <<endl;
-		}
-	}
-
-	return 0;
-}
-
-int main()
-{
-	system("cls");
+	/*system("cls");
 
 	int RetVal = 0;
 
@@ -106,6 +77,34 @@ int main()
 			send(sConnect, buffer, 256, NULL);
 		}
 	}
+	*/
 
+	/*ClientBase cBase = ClientBase("127.0.0.1");
+	cBase.initWinSock();
+	cBase.setupSockets();
+	cBase.connectToServer();
+	
+	SDLWrapper::GetInstance()->Initialize();
+
+
+	cBase.itShouldReceiveServerMsg();
+
+	while(true)
+	{
+		SDLWrapper::GetInstance()->Update();
+
+	}*/
+
+	PentagoBase base = PentagoBase();
+
+	base.initGameSystem();
+	bool running = true;
+
+	while(running)
+	{
+		base.render();
+		running = base.updateGameSystem();
+	}
+	
 	return 0;
 }
