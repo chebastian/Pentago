@@ -10,3 +10,8 @@ ChatClient::ChatClient(const std::string& ip)
 ChatClient::~ChatClient(void)
 {
 }
+
+DWORD ChatClient::run()
+{
+	return 0;
+}

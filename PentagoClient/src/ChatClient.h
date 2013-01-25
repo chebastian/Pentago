@@ -7,5 +7,7 @@ class ChatClient :
 public:
 	ChatClient(const std::string& ip);
 	~ChatClient(void);
+
+	DWORD run() override;
 };
 
