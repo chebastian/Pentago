@@ -9,5 +9,8 @@ public:
 	~ChatClient(void);
 
 	DWORD run() override;
+
+protected:
+	int filmjölk;
 };
 
