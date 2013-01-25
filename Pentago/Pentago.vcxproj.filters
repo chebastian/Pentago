@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleServer.cpp">
+    <ClCompile Include="src\SimpleServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SimpleServer.h">
+    <ClInclude Include="src\Runnable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runnable.h">
+    <ClInclude Include="src\SimpleServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

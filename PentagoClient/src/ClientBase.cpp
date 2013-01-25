@@ -7,6 +7,7 @@ ClientBase::ClientBase(const std::string& ip)
 	mConnectionIP = ip;
 	mMessage = "...";
 	mThreadRunning = false;
+	mClientID = 0;
 }
 
 ClientBase::~ClientBase(void)
@@ -46,8 +47,8 @@ int ClientBase::connectToServer()
 		return RETURN_FAIL;
 	}
 
+	
 	std::cout << "Connected to server" << std::endl;
-
 	return RETURN_OK;
 }
 
@@ -80,6 +81,8 @@ DWORD ClientBase::run()
 
 		delete[] buffer;
 
+		//send message to server
+
 	}
 	return 0;
 }
@@ -93,6 +96,10 @@ SOCKET ClientBase::itShouldReceiveServerMsg()
 
 std::string ClientBase::latestMsgFromServer()
 {
-
 	return mMessage;
+}
+
+void ClientBase::SendMessageToServer(const std::string& msg)
+{
+	send(mConnectSocket,msg.c_str(),msg.length(),NULL);
 }

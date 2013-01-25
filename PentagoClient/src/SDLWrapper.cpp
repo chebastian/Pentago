@@ -48,6 +48,9 @@ void SDLWrapper::RenderString(const std::string& str, int x, int y, int incolor)
 		}
 	}
 
+	if(str.length() <= 0)
+		return;
+
 	SDL_Color color,colorBG;
 	color.r = 255; color.g = 0; color.b = 255;
 	colorBG.r = 100; colorBG.g = 100; colorBG.b = 100;

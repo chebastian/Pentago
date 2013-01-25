@@ -10,6 +10,14 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SimpleServer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Runnable.h" />
+    <ClInclude Include="src\SimpleServer.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{72589FAC-0EB8-4B20-B75F-317E724AB338}</ProjectGuid>
     <RootNamespace>Pentago</RootNamespace>
@@ -61,14 +69,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="SimpleServer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Runnable.h" />
-    <ClInclude Include="SimpleServer.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

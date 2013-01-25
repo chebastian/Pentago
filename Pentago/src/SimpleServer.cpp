@@ -47,7 +47,9 @@ bool SimpleServer::listenForNewConnection()
 	{
 			m_vConnections.push_back(mConnectSocket);
 			std::cout << "Connection Found" << std::endl;
-			
+
+			//send(getLastAddedConnection(),(char*)id,1,NULL);
+
 			return true;		
 	}
 
@@ -104,24 +106,25 @@ void SimpleServer::startServerThread()
 {
 	if(m_vConnections.size() > 1)
 	{
-		std::cout << "no new thread created" << std::endl;
-		return;
+		//std::cout << "no new thread created" << std::endl;
+	//return;
 	}
 	CreateThread(NULL,NULL,(LPTHREAD_START_ROUTINE)SimpleServer::run_thread,(LPVOID*)this,NULL,NULL);
 }
 
 DWORD SimpleServer::run()
 {
+	int id = m_vConnections.size()-1;
 	while(true)
 	{
 		std::string msg = std::string("");
 		char* cmsg = new char[256];
-		std::cin >> cmsg;
+		ZeroMemory(cmsg,256);
 
+		recv(m_vConnections.at(id),cmsg,256,NULL);
 		msg.append(cmsg);
 		this->sendMessageToClients(msg);
 		delete[] cmsg;
-
 	}
 }
 

@@ -24,15 +24,22 @@ public:
 
 	SOCKET itShouldReceiveServerMsg();
 	std::string latestMsgFromServer();
+	void SendMessageToServer(const std::string& msg);
+
+	int getClientID()
+	{
+		return mClientID;
+	}
 
 protected:
+
 	virtual DWORD run();
 	SOCKADDR_IN mAddr;
 	SOCKET mListenSocket;
 	SOCKET mConnectSocket;
 	SOCKET* mConnections;
 
-
+	int mClientID;
 	int mAddrLen;
 	int mConnectionCounter;
 	bool mThreadRunning;

@@ -10,6 +10,34 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ClientBase.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\GameStateManager.h" />
+    <ClInclude Include="src\IkeyboardListener.h" />
+    <ClInclude Include="src\IMouseListener.h" />
+    <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\IRenderable.h" />
+    <ClInclude Include="src\IState.h" />
+    <ClInclude Include="src\JoinServerState.h" />
+    <ClInclude Include="src\KeyEvent.h" />
+    <ClInclude Include="src\MenuState.h" />
+    <ClInclude Include="src\PentagoBase.h" />
+    <ClInclude Include="src\Runnable.h" />
+    <ClInclude Include="src\SDLWrapper.h" />
+    <ClInclude Include="src\Vector2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ClientBase.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\JoinServerState.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MenuState.cpp" />
+    <ClCompile Include="src\PentagoBase.cpp" />
+    <ClCompile Include="src\SDLWrapper.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1CE35293-FDBA-4E83-8804-572B5C1FD32D}</ProjectGuid>
     <RootNamespace>PentagoClient</RootNamespace>
@@ -67,35 +95,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="ClientBase.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="JoinServerState.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MenuState.cpp" />
-    <ClCompile Include="PentagoBase.cpp" />
-    <ClCompile Include="SDLWrapper.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ClientBase.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="GameStateManager.h" />
-    <ClInclude Include="IkeyboardListener.h" />
-    <ClInclude Include="IMessageReceiver.h" />
-    <ClInclude Include="IMessageSender.h" />
-    <ClInclude Include="IMouseListener.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="IRenderable.h" />
-    <ClInclude Include="JoinServerState.h" />
-    <ClInclude Include="KeyEvent.h" />
-    <ClInclude Include="MenuState.h" />
-    <ClInclude Include="PentagoBase.h" />
-    <ClInclude Include="Runnable.h" />
-    <ClInclude Include="SDLWrapper.h" />
-    <ClInclude Include="Vector2D.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
