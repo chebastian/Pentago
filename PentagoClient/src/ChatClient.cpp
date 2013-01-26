@@ -25,10 +25,12 @@ DWORD ChatClient::run()
 	const int RETRY_INTERVAL = 500;
 	while(!mConnected || counter >= MAX_RETRYS)
 	{
-		std::cout << "Client: Waiting for server response..." << std::endl;
+		std::cout << "Client: Waiting for server response..." << std::endl;		
 		int res = connect(mConnectSocket,(SOCKADDR*)&mAddr,sizeof(mAddr));
 		if( res == RETURN_OK)
 		{
+			u_long iMode = 1;
+			ioctlsocket(mConnectSocket,FIONBIO,&iMode);
 			mConnected = true;
 			std::cout << "Server: OK" << std::endl;
 			break;
@@ -52,12 +54,19 @@ DWORD ChatClient::run()
 		ZeroMemory(buffer, bufsz);
 		i = recv(mConnectSocket,buffer,bufsz,NULL);
 
-		if(i <= 0)
+		int err = WSAGetLastError();
+		if(err != WSAEWOULDBLOCK && err != 0)
 		{
 			delete[] buffer;
 			clientShutdown();
 			return 1;
 		}
+
+		if(WSAGetLastError() == WSAEWOULDBLOCK)
+		{
+			continue;
+		}
+
 
 		std::cout << "bytes:  " << i << std::endl;
 		std::cout << buffer << std::endl;
