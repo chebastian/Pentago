@@ -17,24 +17,24 @@ JoinServerState::~JoinServerState(void)
 
 void JoinServerState::OnEnter()
 {
-	mClient = new ClientBase("127.0.0.1");
+	mClient = new ChatClient("127.0.0.1");
 	mClient->initWinSock();
-	mClient->setupSockets();
+	mClient->setupSockets(true);
 	if(mClient->connectToServer() == RETURN_OK)
 	{
-		mConnected = true;
-		mClient->itShouldReceiveServerMsg();
+		//mClient->itShouldReceiveServerMsg();
+		mConnected = mClient->ConnectedToServer();
 	}
 }
 
 void JoinServerState::Update(const float& time)
 {
-
+		
 }
 
 void JoinServerState::Render(SDL_Surface* gs)
 {
-	if(!mConnected)
+	if(!mClient->ConnectedToServer())
 	{
 		SDLWrapper::GetInstance()->RenderString("Waiting for server...", 0,0);
 	}
@@ -50,7 +50,7 @@ void JoinServerState::Render(SDL_Surface* gs)
 
 void JoinServerState::OnKeyDown(KeyEvent& evt)
 {
-	std::string validChars = "qwertyuiopasdfghjklzxcvbnm,.";
+	std::string validChars = "qwertyuiopasdfghjklzxcvbnm,.1234567890 ";
 
 	if( validChars.find(evt.keyChar) != std::string::npos)
 		mMsg += evt.keyChar;

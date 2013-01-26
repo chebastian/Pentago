@@ -4,6 +4,8 @@
 #include "ClientBase.h"
 #include "IkeyboardListener.h"
 #include "KeyEvent.h"
+#include "ChatClient.h"
+#include <vector>
 
 class PentagoBase;
 
@@ -25,8 +27,12 @@ public:
 
 protected:
 	ClientBase* mClient;
+	ChatClient* mChatClient;
+
 	bool mConnected;
 	std::string mMsg;
 
+	typedef std::vector<std::string> Messages;
+	Messages mMessages;
 };
 

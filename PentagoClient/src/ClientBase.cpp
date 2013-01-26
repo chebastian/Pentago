@@ -1,5 +1,5 @@
 #include "ClientBase.h"
-
+#include <ws2tcpip.h>
 
 ClientBase::ClientBase(const std::string& ip)
 	:Runnable()
@@ -8,6 +8,7 @@ ClientBase::ClientBase(const std::string& ip)
 	mMessage = "...";
 	mThreadRunning = false;
 	mClientID = 0;
+	mConnected = false;
 }
 
 ClientBase::~ClientBase(void)
@@ -23,14 +24,18 @@ int ClientBase::initWinSock()
 	return ok;
 }
 
-int ClientBase::setupSockets()
+int ClientBase::setupSockets(bool blocking)
 {
 	mConnections = (SOCKET*)calloc(64,sizeof(SOCKET));
 
 	mConnectSocket = socket(AF_INET,SOCK_STREAM,NULL);
+	u_long iMode = 1;
+
+	if(!blocking)
+		ioctlsocket(mConnectSocket,FIONBIO,&iMode);
 
 	mAddr.sin_addr.s_addr	= inet_addr(mConnectionIP.c_str());
-	mAddr.sin_port			= htons(1234);
+	mAddr.sin_port			= htons(88);
 	mAddr.sin_family		= AF_INET;
 
 	mAddrLen = sizeof(mAddr);
@@ -44,9 +49,8 @@ int ClientBase::connectToServer()
 	if( res == RETURN_FAIL)
 	{
 		this->clientShutdown();
-		return RETURN_FAIL;
+		//return RETURN_FAIL;
 	}
-
 	
 	std::cout << "Connected to server" << std::endl;
 	return RETURN_OK;

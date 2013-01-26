@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PentagoServer.cpp" />
     <ClCompile Include="src\SimpleServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PentagoServer.h" />
     <ClInclude Include="src\Runnable.h" />
     <ClInclude Include="src\SimpleServer.h" />
   </ItemGroup>

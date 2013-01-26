@@ -8,7 +8,7 @@
 #include "Runnable.h"
 
 #define RETURN_OK 0
-#define RETURN_FAIL 1
+#define RETURN_FAIL -1
 
 class ClientBase : public Runnable
 {
@@ -17,8 +17,8 @@ public:
 	virtual ~ClientBase(void);
 
 	int initWinSock();
-	int setupSockets();
-	int connectToServer();
+	int setupSockets(bool blocking);
+	virtual int connectToServer();
 	int connectToServer(const std::string& ip);
 	void clientShutdown();
 
@@ -31,6 +31,9 @@ public:
 		return mClientID;
 	}
 
+	bool ConnectedToServer()
+	{return mConnected;}
+
 protected:
 
 	virtual DWORD run();
@@ -39,6 +42,7 @@ protected:
 	SOCKET mConnectSocket;
 	SOCKET* mConnections;
 
+	bool mConnected;
 	int mClientID;
 	int mAddrLen;
 	int mConnectionCounter;

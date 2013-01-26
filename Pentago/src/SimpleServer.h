@@ -33,13 +33,12 @@ public:
 
 	int initWinSock();
 	int setupSockets();
-	int serverThread(int ID);
-	bool listenForNewConnection();
+	
+	virtual bool listenForNewConnection();
 	int update();
 	void sendMessageToClients(const std::string& msg);
 
 	void startServerThread();
-	static void myServerThread(SimpleServer& server);
 
 	const int numClients() const
 	{return m_vConnections.size();}

@@ -30,7 +30,7 @@ int SimpleServer::setupSockets()
 	mConnectSocket = socket(AF_INET,SOCK_STREAM,NULL);
 
 	mAddr.sin_addr.s_addr	= inet_addr(mConnectionIP.c_str());
-	mAddr.sin_port			= htons(1234);
+	mAddr.sin_port			= htons(88);
 	mAddr.sin_family		= AF_INET;
 
 	mAddrLen = sizeof(mAddr);
@@ -45,28 +45,16 @@ bool SimpleServer::listenForNewConnection()
 {
 	if(mConnectSocket = accept(mListenSocket,(SOCKADDR*)&mAddr,&mAddrLen))
 	{
-			m_vConnections.push_back(mConnectSocket);
-			std::cout << "Connection Found" << std::endl;
 
-			//send(getLastAddedConnection(),(char*)id,1,NULL);
+		m_vConnections.push_back(mConnectSocket);
+		std::cout << "Connection Found" << std::endl;
 
-			return true;		
+		//send(getLastAddedConnection(),(char*)id,1,NULL);
+
+		return true;		
 	}
 
 	return false;
-}
-
-int SimpleServer::serverThread(int ID)
-{
-	while(true)
-	{
-		if(mConnectSocket = accept(mListenSocket,(SOCKADDR*)&mAddr,&mAddrLen))
-		{
-			mConnections[mConnectionCounter] = mConnectSocket;
-			std::cout << "Connection Found" << std::endl;
-		}
-	}
-	return NETWORK_OK;
 }
 
 int SimpleServer::update()
@@ -86,20 +74,6 @@ SOCKET SimpleServer::getLastAddedConnection()
 		std::cout << e.what() << std::endl;
 	}
 	return toGet;
-}
-
-void SimpleServer::myServerThread(SimpleServer& server)
-{
-	/*while(true)
-	{
-		std::string msg = std::string("");
-		char* cmsg = new char[256];
-		std::cin >> cmsg;
-
-		msg.append(cmsg);
-		server.sendMessageToClients(msg);
-		delete[] cmsg;
-	}*/
 }
 
 void SimpleServer::startServerThread()
