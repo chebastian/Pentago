@@ -37,8 +37,9 @@ public:
 	virtual bool listenForNewConnection();
 	int update();
 	void sendMessageToClients(const std::string& msg);
-
+	void sendMessageToClient(const int sender, const int recv, const std::string& msg);
 	void startServerThread();
+	SOCKET getClient(int id);
 
 	const int numClients() const
 	{return m_vConnections.size();}
@@ -50,6 +51,8 @@ protected:
 	virtual DWORD run();
 	virtual void listenToClient(int id);
 	SOCKET getLastAddedConnection();
+
+	virtual void respondToErrorMsg(int error, SOCKET s);
 
 	SOCKADDR_IN mAddr;
 	SOCKET mListenSocket;

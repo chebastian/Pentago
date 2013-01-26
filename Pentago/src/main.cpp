@@ -7,127 +7,21 @@
 #include <Windows.h>
 #include <iostream>
 #include "SimpleServer.h"
+#include "PentagoServer.h"
 
 using namespace std;
 
 // Ok at first I am going to do some WinSock standard stuff
 // If you don`t understand it watch my other tutorials
 
-SOCKADDR_IN addr;
-
-SOCKET sListen;
-SOCKET sConnect;
-SOCKET* Connections;
-
-int addrlen = sizeof(addr);
-int ConCounter = 0;
-
-struct Buffer
-{
-	int ID;
-	char Message[256];
-};
-
-struct testBuffer
-{
-	std::string ID; 
-	std::string Msg;
-};
-
-void itShouldReceiveAndSendMessagesToClient(int id)
-{
-	testBuffer bufSend;
-	char* rcvMsg;
-	char* csend = new char[sizeof(testBuffer)];
-	ZeroMemory(csend,sizeof(testBuffer));
-
-	rcvMsg = new char[sizeof(testBuffer)];
-	ZeroMemory(rcvMsg,sizeof(testBuffer));
-
-	while(true)
-	{
-		if(recv(Connections[id],rcvMsg,sizeof(testBuffer),NULL))
-		{
-			bufSend.ID = id;
-			memcpy((void*)(bufSend.Msg.c_str()),rcvMsg,sizeof(rcvMsg));
-			memcpy(csend,&bufSend,sizeof(bufSend));
-			std::cout << "sending to client" << std::endl;
-
-			for(int a = 0; a != ConCounter; a++)
-			{
-				if(Connections[a] == Connections[id])
-				{
-
-				}
-				else
-				{
-					send(Connections[a], csend, sizeof(Buffer), NULL);
-				}
-			}
-			ZeroMemory(rcvMsg, 256);
-		}
-	}
-}
-
-int ServerThread(int ID)
-{
-	Buffer sbuffer;
-
-	char* Recv = new char[256];
-	ZeroMemory(Recv, 256);
-
-	// In Send we will copy the content of the struct
-	// and after this we will send "Send" to the client
-	char* Send = new char[sizeof(Buffer)];
-	ZeroMemory(Send, sizeof(Buffer));
-
-	for(;; Sleep(10))
-	{
-		// Same here!
-		std::cout << "waiting for messages" << std::endl;
-		if(recv(Connections[ID], Recv, 256, NULL))
-		{
-			sbuffer.ID = ID;
-			memcpy(sbuffer.Message, Recv, 256);
-			memcpy(Send, &sbuffer, sizeof(Buffer));
-			std::cout << "Sending msg to clients" << std::endl;
-
-			for(int a = 0; a != ConCounter; a++)
-			{
-				if(Connections[a] == Connections[ID])
-				{
-
-				}
-				else
-				{
-					send(Connections[a], Send, sizeof(Buffer), NULL);
-				}
-			}
-			ZeroMemory(Recv, 256);
-		}
-	}
-
-	return 0;
-}
-
-int InitWinSock()
-{
-	int RetVal = 0;
-	WSAData wsaData;
-	WORD DllVersion = MAKEWORD(2,1);
-	RetVal = WSAStartup(DllVersion, &wsaData);
-
-	return RetVal;
-}
-
 int main()
 {
-	SimpleServer simpleServer = SimpleServer("127.0.0.1");
+	PentagoServer simpleServer = PentagoServer("127.0.0.1");
 	simpleServer.initWinSock();
 	simpleServer.setupSockets();
-	const int FIRST_THREAD = 1;
+	bool appRunning = true;
 
-	while(true)
+	while(appRunning)
 	{
 		if(simpleServer.listenForNewConnection())
 		{

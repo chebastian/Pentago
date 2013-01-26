@@ -43,14 +43,11 @@ int SimpleServer::setupSockets()
 
 bool SimpleServer::listenForNewConnection()
 {
-	if(mConnectSocket = accept(mListenSocket,(SOCKADDR*)&mAddr,&mAddrLen))
+	mConnectSocket = accept(mListenSocket,(SOCKADDR*)&mAddr,&mAddrLen);
+	if(mConnectSocket)
 	{
-
 		m_vConnections.push_back(mConnectSocket);
 		std::cout << "Connection Found" << std::endl;
-
-		//send(getLastAddedConnection(),(char*)id,1,NULL);
-
 		return true;		
 	}
 
@@ -89,7 +86,9 @@ void SimpleServer::startServerThread()
 DWORD SimpleServer::run()
 {
 	int id = m_vConnections.size()-1;
-	while(true)
+	bool serverRunning = true;
+
+	while(serverRunning)
 	{
 		std::string msg = std::string("");
 		char* cmsg = new char[256];
@@ -100,17 +99,40 @@ DWORD SimpleServer::run()
 		this->sendMessageToClients(msg);
 		delete[] cmsg;
 	}
+	
+	return 0;
 }
 
 
 void SimpleServer::sendMessageToClients(const std::string& msg)
 {
-	for(int i = 0; i < m_vConnections.size(); i++)
+	for(unsigned int i = 0; i < m_vConnections.size(); i++)
 	{
 		send(m_vConnections.at(i),msg.c_str(),msg.length(),NULL);
 	}
 }
 
+void SimpleServer::sendMessageToClient(const int sender, const int recv, const std::string& msg)
+{
+	try
+	{
+		int s = sender;
+		s = s;
+
+		SOCKET receiver = getClient(recv);
+		send(receiver,msg.c_str(),msg.length(),NULL);
+	}
+	catch(std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+
+	}
+}
+
+SOCKET SimpleServer::getClient(int id)
+{
+	return m_vConnections.at(id);
+}
 void SimpleServer::listenToClient(int id)
 {
 	SOCKET s = m_vConnections.at(id);
@@ -125,4 +147,21 @@ void SimpleServer::listenToClient(int id)
 	}
 
 	delete[] buff;
+}
+
+void SimpleServer::respondToErrorMsg(int error,SOCKET s)
+{
+	switch(error)
+	{
+	case WSAEWOULDBLOCK:
+		{
+		}break;
+	case 0:
+		{
+		}break;
+	default:
+		{
+			shutdown(s,SD_SEND);
+		}break;
+	}
 }
