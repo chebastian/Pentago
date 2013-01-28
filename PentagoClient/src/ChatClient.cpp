@@ -5,6 +5,7 @@ ChatClient::ChatClient(const std::string& ip)
 	:ClientBase(ip)
 {
 	mConnected = false;
+	mMessages = std::vector<std::string>();
 }
 
 
@@ -22,7 +23,8 @@ DWORD ChatClient::run()
 	int counter = 0;
 	mThreadRunning = true;
 	const int MAX_RETRYS = 20;
-	const int RETRY_INTERVAL = 500;
+	const int RETRY_INTERVAL = 200;
+
 	while(!mConnected || counter >= MAX_RETRYS)
 	{
 		std::cout << "Client: Waiting for server response..." << std::endl;		
@@ -64,6 +66,7 @@ DWORD ChatClient::run()
 
 		if(WSAGetLastError() == WSAEWOULDBLOCK)
 		{
+			delete[] buffer;
 			continue;
 		}
 
@@ -71,8 +74,9 @@ DWORD ChatClient::run()
 		std::cout << "bytes:  " << i << std::endl;
 		std::cout << buffer << std::endl;
 		mMessage = std::string(buffer);
-
+		//mMessages.push_back(mMessage);
 		delete[] buffer;
+		Sleep(RETRY_INTERVAL);
 
 		//send message to server
 
@@ -83,4 +87,9 @@ DWORD ChatClient::run()
 bool ChatClient::newMessageRcvdFromServer()
 {
 	return false;
+}
+
+ChatClient::Messages ChatClient::getMessages()
+{
+	return mMessages;
 }

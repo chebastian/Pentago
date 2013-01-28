@@ -26,13 +26,9 @@ public:
 	virtual const int& KeyListenerId();
 
 protected:
-	ClientBase* mClient;
-	ChatClient* mChatClient;
+	ChatClient* mClient;
 
 	bool mConnected;
 	std::string mMsg;
-
-	typedef std::vector<std::string> Messages;
-	Messages mMessages;
 };
 

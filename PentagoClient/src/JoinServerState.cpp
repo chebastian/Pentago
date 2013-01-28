@@ -43,7 +43,7 @@ void JoinServerState::Render(SDL_Surface* gs)
 		SDLWrapper::GetInstance()->RenderString("Connection etablished", 0,0);
 		SDLWrapper::GetInstance()->RenderString(mClient->latestMsgFromServer(), 10,20);
 
-		SDLWrapper::GetInstance()->RenderString(mMsg, 10,40);
+		SDLWrapper::GetInstance()->RenderString(mMsg, 10,SDLWrapper::GetInstance()->Screen()->h - 20);
 	}
 
 }
