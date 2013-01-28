@@ -111,11 +111,9 @@ DWORD PentagoServer::run()
 
 		if(WSAGetLastError() != WSAEWOULDBLOCK)
 		{
-			//this->sendMessageToClients(msg);
 			if(mConnectedClients.at(id).isPaired)
 			{
 				int recid = mConnectedClients.at(id).PartnerID;
-				Sleep(10);
 				this->sendMessageToClient(id,recid,msg);
 			}
 		}
