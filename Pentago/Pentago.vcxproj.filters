@@ -35,5 +35,17 @@
     <ClInclude Include="src\PentagoServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SFMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PentagoClient\src\ClientMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PentagoClient\src\Receivers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

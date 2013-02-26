@@ -16,9 +16,13 @@
     <ClCompile Include="src\SimpleServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\PentagoClient\src\ClientMessage.h" />
+    <ClInclude Include="..\PentagoClient\src\Receivers.h" />
     <ClInclude Include="src\PentagoServer.h" />
     <ClInclude Include="src\Runnable.h" />
+    <ClInclude Include="src\SFMessage.h" />
     <ClInclude Include="src\SimpleServer.h" />
+    <ClInclude Include="src\Vector2D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{72589FAC-0EB8-4B20-B75F-317E724AB338}</ProjectGuid>
@@ -54,10 +58,14 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

@@ -1,5 +1,5 @@
 #include "PentagoServer.h"
-
+#include "../../PentagoClient/src/Receivers.h"
 
 PentagoServer::PentagoServer(const std::string& ip)
 	:SimpleServer(ip)
@@ -96,7 +96,8 @@ int PentagoServer::setupSockets()
 
 DWORD PentagoServer::run()
 {
-	int id = m_vConnections.size()-1;
+	handlePacketsBetweenClients();
+	/*int id = m_vConnections.size()-1;
 	bool threadRunning = true;
 	while(threadRunning)
 	{
@@ -104,7 +105,7 @@ DWORD PentagoServer::run()
 		char* cmsg = new char[256];
 		ZeroMemory(cmsg,256);
 
-		recv(m_vConnections.at(id),cmsg,256,NULL);
+		int bytes = recv(m_vConnections.at(id),cmsg,256,NULL);
 		respondToErrorMsg(WSAGetLastError(), getClient(id) );
 		
 		msg.append(cmsg);
@@ -117,15 +118,100 @@ DWORD PentagoServer::run()
 				this->sendMessageToClient(id,recid,msg);
 			}
 		}
+
 		delete[] cmsg;
+
+		if(bytes == 0 && WSAGetLastError() != WSAEWOULDBLOCK && WSAGetLastError() != 0)
+		{
+			shutdownSocket(m_vConnections.at(id));
+			m_vConnections.erase(m_vConnections.begin() + id);
+			return 1;
+		}
+
+		Sleep(mThreadSleepTime);
+	}*/
+
+	return 0;
+}
+
+void PentagoServer::handlePacketsBetweenClients()
+{
+	int id = m_vConnections.size()-1;
+	bool threadRunning = true;
+
+	PentagoClientObj me, partner;
+	me = mConnectedClients.at(id);
+	partner = mConnectedClients.at(me.PartnerID);
+	bool firstTimeSetup = true;
+
+	while(threadRunning)
+	{
+		char* cmsg = new char[256];
+		ZeroMemory(cmsg,256);
+
+		ClientMessage msg = ClientMessage();
+		int bytes = recv(m_vConnections.at(id),reinterpret_cast<char*>(&msg),sizeof(msg),NULL);
+		respondToErrorMsg(WSAGetLastError(), getClient(id) );
+
+		if(mConnectedClients.at(id).isPaired && firstTimeSetup)
+		{
+			firstTimeSetup = false;
+			partner = mConnectedClients.at(me.PartnerID);
+			sendSetupInfoToClients(&me,&partner);
+		}
+
+		if(WSAGetLastError() != WSAEWOULDBLOCK)
+		{
+			if(mConnectedClients.at(id).isPaired)
+			{
+				int recid = mConnectedClients.at(id).PartnerID;
+				//this->sendMessageToClient(id,recid,msg);
+				this->sendClientPacketToClient(recid,msg);
+			}
+		}
+
+		delete[] cmsg;
+
+		if(bytes == 0 && WSAGetLastError() != WSAEWOULDBLOCK && WSAGetLastError() != 0)
+		{
+			shutdownSocket(m_vConnections.at(id));
+			m_vConnections.erase(m_vConnections.begin() + id);
+			return;
+		}
 
 		Sleep(mThreadSleepTime);
 	}
 
+	return;
+}
+
+int PentagoServer::sendClientPacketToClient(int id, ClientMessage& msg)
+{
+	send(getClient(id), reinterpret_cast<char*>(&msg),sizeof(msg),0);
 	return 0;
 }
 
 void PentagoServer::addNewClient(PentagoClientObj client)
 {
 	mConnectedClients.push_back(client);
+}
+
+bool PentagoServer::messageIsClientPlayer()
+{
+	return false;
+}
+
+void PentagoServer::sendSetupInfoToClients( PentagoClientObj* a, PentagoClientObj* b )
+{
+	ClientMessage initializePacket = ClientMessage();
+	initializePacket.id = SERVER_ID;
+	initializePacket.MsgType = ClientMessage::TYPE_SETUP_GAME;
+	initializePacket.message = a->ID;
+	sendClientPacketToClient(a->ID,initializePacket);
+
+	initializePacket.id = SERVER_ID;
+	initializePacket.MsgType = ClientMessage::TYPE_SETUP_GAME;
+	initializePacket.message = b->ID;
+	sendClientPacketToClient(b->ID,initializePacket);
+
 }

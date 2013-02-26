@@ -11,6 +11,7 @@ SimpleServer::SimpleServer(const std::string& ip)
 
 SimpleServer::~SimpleServer(void)
 {
+	shutdownServer();
 }
 
 int SimpleServer::initWinSock()
@@ -164,4 +165,20 @@ void SimpleServer::respondToErrorMsg(int error,SOCKET s)
 			shutdown(s,SD_SEND);
 		}break;
 	}
+}
+
+void SimpleServer::shutdownServer()
+{
+	std::cout << "SHUTING DOWN SOCKETS" << std::endl;
+	for(unsigned int i = 0; i < m_vConnections.size(); i++)
+	{
+		shutdownSocket(m_vConnections.at(i));
+	}
+	WSACleanup();
+}
+
+void SimpleServer::shutdownSocket(SOCKET s)
+{
+	shutdown(s,SD_SEND);
+	closesocket(s);
 }

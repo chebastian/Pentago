@@ -40,6 +40,8 @@ public:
 	void sendMessageToClient(const int sender, const int recv, const std::string& msg);
 	void startServerThread();
 	SOCKET getClient(int id);
+	virtual void shutdownServer();
+	virtual void shutdownSocket(SOCKET s);
 
 	const int numClients() const
 	{return m_vConnections.size();}
