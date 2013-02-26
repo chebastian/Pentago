@@ -1,0 +1,9 @@
+#ifndef RECEIVERS
+#define RECEIVERS
+
+#define ROUND_ID 0xFF1234
+#define CLIENT_ID 0xFF2345
+#define SERVER_ID 0xFF4546
+#define OTHER_ID 0xFFFFFF
+
+#endif // !RECEIVERS

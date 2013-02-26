@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "InputManager.h"
 #include "KeyEvent.h"
+#include <sstream>
 
 SDLWrapper::SDLWrapper(void)
 {
@@ -16,8 +17,10 @@ SDLWrapper::SDLWrapper(void)
 	mInputMgr = new InputManager();
 	mElapsedTime = 1.0f;
 	testEnt = Entity(0);
-
+	mCurrentFPS = 0;
+	mTimeUntilNextSecond = 1.0f;
 	mInputMgr->AddMouseListener(&testEnt);
+	FrameLimiter = true;
 }
 
 
@@ -74,7 +77,6 @@ void SDLWrapper::RenderString(const std::string& str, int x, int y, int incolor)
 
 }
 
-
 bool SDLWrapper::Update()
 {
 	static Uint32 lastTime = 0;
@@ -87,9 +89,34 @@ bool SDLWrapper::Update()
 
 	lastTime = now;
 
+	renderFPS(SFMath::Vector2Di(400,10));
 	SDL_Flip(mScreen);
 	ClearScreen();
+
+	if(FrameLimiter)
+	{
+		if(elapsed <= 1.0f/30.0f)
+			Sleep(20);
+	}
+
 	return mIsRunning;
+}
+
+void SDLWrapper::renderFPS(const SFMath::Vector2Di& pos)
+{
+	std::stringstream ss;
+	ss << mCurrentFPS;
+	std::string elapsedStr = ss.str();
+	RenderString(elapsedStr,pos.x,pos.y);
+	mFrameCounter++;
+	mTimeUntilNextSecond -= mElapsedTime;
+	
+	if(mTimeUntilNextSecond <= 0.0f)
+	{
+		mTimeUntilNextSecond = 1.0f;
+		mCurrentFPS = mFrameCounter;
+		mFrameCounter = 0;
+	}	
 }
 
 void SDLWrapper::HandleInputFromSDL()
@@ -126,6 +153,18 @@ void SDLWrapper::HandleInputFromSDL()
 			mInputMgr->ProcessInput(event);
 		}
 
+		else if(evt.type == SDL_MOUSEBUTTONDOWN)
+		{
+			event.Type = Event_Type::EVT_MOUSEPRESSED;
+			mInputMgr->ProcessInput(event);
+		}
+
+		else if(evt.type == SDL_MOUSEBUTTONUP)
+		{
+			event.Type = Event_Type::EVT_MOUSERELEASED;
+			mInputMgr->ProcessInput(event);
+		}
+
 	}
 
 }
@@ -143,6 +182,12 @@ Key_Code SDLWrapper::TranslateSDLKeyToKeyCodes(SDL_Event& evt)
 		code = Key_Code::KC_UP;
 	if(evt.key.keysym.sym == SDLK_SPACE)
 		code = Key_Code::KC_SPACE;
+	if(evt.key.keysym.sym == SDLK_ESCAPE)
+		code = Key_Code::KC_ESC;
+	if(evt.key.keysym.sym == SDLK_RETURN)
+		code = Key_Code::KC_ENTER;
+	if(evt.key.keysym.sym == SDLK_BACKSPACE)
+		code = Key_Code::KC_BACKSPACE;
 		
 	return code;
 }
@@ -168,7 +213,7 @@ void SDLWrapper::DrawPixel(SDL_Surface* screen, int x, int y, ColorRGB* rgb)
 void SDLWrapper::ClearScreen()
 {
 	SDL_Surface* screen = Screen();
-	ColorRGB rgb = ColorRGB(0,0,0);
+	ColorRGB rgb = ColorRGB(100,100,100);
 
 	Uint32 col = SDL_MapRGB(screen->format, rgb.r,rgb.g,rgb.b);
 	//rgb = col;
@@ -214,4 +259,97 @@ float SDLWrapper::GetElapsedTime()
 
 void SDLWrapper::ClearInputBuffer()
 {
+}
+
+SDL_Surface* SDLWrapper::createNewRotatedSurface(SDL_Surface* pSrc, SDL_Rect src_rect,int degree)
+{
+	SDL_Surface* res;
+
+	float radians = ((2.0f*3.14f)*degree)/360;
+	SDL_Surface* src = createNewSubSurface(pSrc,src_rect);
+	rgba* src_pixles = reinterpret_cast<rgba*>(src->pixels);
+	
+	float cosine = cos(radians);
+	float sine = sin(radians);
+
+	float sinH = src->h*sine;
+	float cosH = src->h*cosine;
+	float sinW = src->w*sine;
+	float cosW = src->w*cosine;
+
+	SFMath::Vector2Df p1(-sinH, cosH);
+	SFMath::Vector2Df p2(cosW-sinH, cosH+sinW);
+	SFMath::Vector2Df p3(cosW, sinW);
+	SFMath::Vector2Df p4(-sinW, sinH);
+	
+	SFMath::Vector2Df pMin(min(0,min(p1.x, min(p2.x, min(p3.x,p4.x)))),
+						min(0,min(p1.y, min(p2.y, min(p3.y,p4.y)))));
+
+	SFMath::Vector2Df pMax(max(0,max(p1.x, max(p2.x, max(p3.x,p4.x)))),
+						max(0,max(p1.y, max(p2.y, max(p3.y,p4.y)))));
+
+	int dstW = (int)ceil((pMax.x)-pMin.x);
+	int dstH = (int)ceil((pMax.y)-(pMin.y));
+
+	res = SDL_CreateRGBSurface(SDL_HWSURFACE,dstW,dstH,32,0,0,0,255);
+	rgba* dst_pixles = reinterpret_cast<rgba*>(res->pixels);
+	for(int x = 0; x < dstW; x++)
+	{
+		for(int y = 0; y < dstH; y++)
+		{
+			int SrcBitmapx=(int)((x+pMin.x)*cosine+(y+pMin.y)*sine); 
+			int SrcBitmapy=(int)((y+pMin.y)*cosine-(x+pMin.x)*sine);
+			int iw =src->w;
+			int ih =src->h;
+			
+			if(SrcBitmapx >= 0 && SrcBitmapx <= iw &&
+				SrcBitmapy >= 0 && SrcBitmapy <= ih)
+			{
+				dst_pixles[x+y*dstW] = src_pixles[SrcBitmapx+SrcBitmapy*src->w];
+			}
+			else
+			{
+				Color_RGBA alpha = Color_RGBA();
+				alpha.a = 0;
+				alpha.b = 255;
+				alpha.r = 255;
+				alpha.g = 0;
+				dst_pixles[x+y*dstW] = alpha;
+			}
+		}
+	}
+	
+	SDL_FreeSurface(src);
+	return res;
+}
+
+SDL_Surface* SDLWrapper::createNewSubSurface(SDL_Surface* src, SDL_Rect src_rect)
+{
+	SDL_Surface* xres = SDL_CreateRGBSurface(SDL_HWSURFACE,src_rect.w,src_rect.h,32,0,0,0,255);
+	Color_RGBA* dstPixles = reinterpret_cast<Color_RGBA*>(xres->pixels);
+	Color_RGBA* srcPixles = reinterpret_cast<Color_RGBA*>(src->pixels);
+	
+	for(int y = 0; y < src_rect.h; y++)
+	{
+		for(int x = 0; x < src_rect.w; x++)
+		{
+			dstPixles[x+y*src_rect.w] = srcPixles[(x+src_rect.x)+(y+src_rect.y)*src->w];
+		}
+	}
+
+	return xres;
+}
+
+void SDLWrapper::pasteSurfaceIntoSurface(SDL_Surface* dst, SDL_Surface* src, const SFMath::Vector2Di& offset)
+{
+	Color_RGBA* dstPixels = reinterpret_cast<Color_RGBA*>(dst->pixels);
+	Color_RGBA* srcPixels = reinterpret_cast<Color_RGBA*>(src->pixels);
+	
+	for(int y = 0; y < src->h; y++)
+	{
+		for(int x = 0; x < src->w; x++)
+		{
+			dstPixels[(x+offset.x)+(y+offset.y)*dst->w] = srcPixels[x+y*src->w];
+		}
+	}
 }

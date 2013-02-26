@@ -22,6 +22,7 @@
 	 KC_UP,
 	 KC_DOWN,
 	 KC_SHIFT,
+	 KC_ENTER,
 	 KC_NONE,
 	 NUM_KC
  };

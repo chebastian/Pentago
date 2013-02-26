@@ -15,6 +15,9 @@ public:
 	Entity(const int& id);
 	virtual ~Entity(void);
 
+	void setPosition(SFMath::Vector2Di pos)
+	{mPosition = pos;}
+
 	virtual void Render(SDL_Surface* screen);
 	virtual int GetLayer() {return 0;}
 
@@ -30,6 +33,8 @@ public:
 	virtual const int& MouseListenerId() {return mEntityID;}
 	virtual const int& ListenerPriority() {return mEntityID;}
 
+	SFMath::Vector2Di Position()
+	{return mPosition;}
 protected:
 
 	SFMath::Vector2Di mPosition;

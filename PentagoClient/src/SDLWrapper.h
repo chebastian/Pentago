@@ -21,6 +21,15 @@ typedef struct ColorRGB
 	{}
 } ColorRGB;
 
+typedef struct rgba
+{
+	Uint8 r;
+	Uint8 g;
+	Uint8 b;
+	Uint8 a;
+
+}Color_RGBA;
+
 class SDLWrapper
 {
 public:
@@ -48,6 +57,10 @@ public:
 	bool IsKeyDown(SDLKey key);
 	void ClearInputBuffer();
 
+	SDL_Surface* createNewRotatedSurface(SDL_Surface* pSrc,SDL_Rect src_rect,int degree);
+	SDL_Surface* createNewSubSurface(SDL_Surface* src, SDL_Rect src_rect);
+	void pasteSurfaceIntoSurface(SDL_Surface* dst, SDL_Surface* src, const SFMath::Vector2Di& offset);
+
 	InputManager* GetInput()
 	{
 		return mInputMgr;
@@ -59,8 +72,10 @@ public:
 
 	void ClearScreen();
 
+
 private:
 
+	void renderFPS(const SFMath::Vector2Di& pos);
 	void HandleInputFromSDL();
 	Key_Code TranslateSDLKeyToKeyCodes(SDL_Event& evt);
 	SDLWrapper(void);
@@ -72,8 +87,12 @@ private:
 	int* mKeysDown; 
 	InputManager* mInputMgr;
 	float mElapsedTime;
+	int mFrameCounter;
+	float mTimeUntilNextSecond;
+	int mCurrentFPS;
 	TTF_Font* mFontTTF;
 	SDL_Surface* mTextSurface;
 	//Test
 	Entity testEnt;
+	bool FrameLimiter;
 };

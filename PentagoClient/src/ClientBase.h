@@ -4,8 +4,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include "SFMessage.h"
 #include "Runnable.h"
+#include "Vector2D.h"
+
+#include "ClientMessage.h"
 
 #define RETURN_OK 0
 #define RETURN_FAIL -1
@@ -37,6 +40,7 @@ public:
 protected:
 
 	virtual DWORD run();
+	bool waitTillFinishedRecv();
 	SOCKADDR_IN mAddr;
 	SOCKET mListenSocket;
 	SOCKET mConnectSocket;

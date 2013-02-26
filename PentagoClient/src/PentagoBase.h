@@ -4,7 +4,7 @@
 #include "SDL.h"
 #include "SDLWrapper.h"
 #include "IkeyboardListener.h"
-
+#include "ClientPlayer.h"
 
 class PentagoBase : public IKeyboardListener
 {
@@ -24,8 +24,13 @@ public:
 
 	virtual const int& KeyListenerId();
 
-private:
+	InputManager* GetInput();
+	ClientPlayer* PlayerClient();
 
+	SFMath::Vector2Di ScreenSize();
+
+private:
+	ClientPlayer* mPlayerClient;
 	int mCurrIndex;
 	GameStateManager* mGameStateMgr;
 	int mID;

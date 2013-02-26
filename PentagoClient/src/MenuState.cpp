@@ -3,6 +3,7 @@
 #include "JoinServerState.h"
 #include "PentagoBase.h"
 #include "InputManager.h"
+#include "testState.h"
 
 MenuState::MenuState(PentagoBase* base)
 	:GameState(base)
@@ -64,11 +65,15 @@ void MenuState::OnKeyDown(KeyEvent& evt)
 	}
 	else if(evt.KeyCode == Key_Code::KC_SPACE)
 	{
-		if(mCurrIndex == 1)
+		if(mCurrIndex == 0)
+		{
+			mGame->ChangeState(new testState(mGame));
+		}
+		else if(mCurrIndex == 1)
 		{
 			mGame->ChangeState(new JoinServerState(mGame));
 		}
-		if(mCurrIndex == 2)
+		else if(mCurrIndex == 2)
 			SDLWrapper::GetInstance()->ShutDown();
 	}
 

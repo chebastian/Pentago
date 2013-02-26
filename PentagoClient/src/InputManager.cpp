@@ -193,7 +193,7 @@ void InputManager::ProcessMouseClicked(KeyEvent& evt, IMouseListener* listener)
 		//if(evt.button.button == SDL_BUTTON_RIGHT)
 			mMouse->SetRightMouseButton(true);
 
-		listener->OnMouseDown(mMouse);
+		//listener->OnMouseDown(mMouse);
 
 		if(!mLBLastState && listener->CheckMouseOver(mMouse))
 		{

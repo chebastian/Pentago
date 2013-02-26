@@ -1,24 +1,24 @@
 #pragma once
-#include "GameState.h"
-#include "SDL.h"
-#include "ClientBase.h"
+#include "gamestate.h"
 #include "IkeyboardListener.h"
-#include "KeyEvent.h"
-#include "ChatClient.h"
-#include <vector>
+#include "RoundMachine.h"
 
-class PentagoBase;
-class ClientPlayer;
+class Entity;
+class Board;
+class GameBoard;
 
-class JoinServerState : public GameState, public IKeyboardListener
+class PlayState :
+	public GameState, public IKeyboardListener
 {
 public:
-	JoinServerState(PentagoBase* base);
-	~JoinServerState(void);
+	PlayState(PentagoBase* base);
+	virtual ~PlayState(void);
 
 	virtual void OnEnter();
 	virtual void Update(const float& time);
 	virtual void Render(SDL_Surface* gs);
+
+	virtual void OnExit();
 
 	virtual void OnKeyClicked(KeyEvent& evt){};
 	virtual void OnKeyDown(KeyEvent& evt);
@@ -27,9 +27,10 @@ public:
 	virtual const int& KeyListenerId();
 
 protected:
-	ClientPlayer* mClient;
 
-	bool mConnected;
+	Entity* mEntity;
 	std::string mMsg;
+	GameBoard* mGameBoard;
+	RoundMachine* mRoundMachine;
 };
 

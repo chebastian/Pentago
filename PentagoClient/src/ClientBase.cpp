@@ -1,5 +1,6 @@
 #include "ClientBase.h"
 #include <ws2tcpip.h>
+#include <exception>
 
 ClientBase::ClientBase(const std::string& ip)
 	:Runnable()
@@ -49,17 +50,38 @@ int ClientBase::connectToServer()
 	if( res == RETURN_FAIL)
 	{
 		this->clientShutdown();
-		//return RETURN_FAIL;
 	}
-	
+	mConnected = true;
 	std::cout << "Connected to server" << std::endl;
 	return RETURN_OK;
 }
 
 void ClientBase::clientShutdown()
 {
-	WSACleanup();
+	shutdown(mConnectSocket,SD_SEND);
+	waitTillFinishedRecv();
+
+	closesocket(this->mConnectSocket);
+	int errC = WSACleanup();
+	std::cout << errC;
+	mThreadRunning = false;
+	mConnected = false;
 	exit(0);
+}
+
+bool ClientBase::waitTillFinishedRecv()
+{
+	bool receiving = true;
+	while(receiving == true)
+	{
+		char* b = new char[1];
+		int bytes = recv(this->mConnectSocket,b,1,NULL);
+		if(bytes == 0 || bytes == SOCKET_ERROR || bytes < 0)
+			receiving = false;
+
+		delete[] b;
+	}
+	return true;
 }
 
 DWORD ClientBase::run()
@@ -105,5 +127,13 @@ std::string ClientBase::latestMsgFromServer()
 
 void ClientBase::SendMessageToServer(const std::string& msg)
 {
-	send(mConnectSocket,msg.c_str(),msg.length(),NULL);
+	ClientMessage packet = ClientMessage();
+	
+	for(size_t i = 0; i < msg.size(); i++)
+	{
+		packet.text[i] = msg.at(i);
+	}
+
+	send(mConnectSocket,reinterpret_cast<char*>(&packet),sizeof(packet),0);
+	//send(mConnectSocket,msg.c_str(),msg.length(),NULL);
 }
