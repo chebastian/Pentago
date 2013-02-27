@@ -203,15 +203,17 @@ bool PentagoServer::messageIsClientPlayer()
 
 void PentagoServer::sendSetupInfoToClients( PentagoClientObj* a, PentagoClientObj* b )
 {
+	const int starterID = 0;
+	const int secondID = 1;
 	ClientMessage initializePacket = ClientMessage();
 	initializePacket.id = SERVER_ID;
 	initializePacket.MsgType = ClientMessage::TYPE_SETUP_GAME;
-	initializePacket.message = a->ID;
+	initializePacket.message = starterID;
 	sendClientPacketToClient(a->ID,initializePacket);
 
 	initializePacket.id = SERVER_ID;
 	initializePacket.MsgType = ClientMessage::TYPE_SETUP_GAME;
-	initializePacket.message = b->ID;
+	initializePacket.message = secondID;
 	sendClientPacketToClient(b->ID,initializePacket);
 
 }

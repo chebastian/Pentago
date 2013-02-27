@@ -32,8 +32,8 @@ void testState::OnEnter()
 	mCurrentPlayer = PLAYER_ID::PLAYER_1;
 
 	mActor = new AgentPlayer(mGame, mGameBoard);
-	mRoundMachine = new RoundMachine(mGame,mGameBoard, new PlaceRound(mGame,mGameBoard,PLAYER_1),mActor);
-	mRoundMachine->AddPlayer(new HumanPlayer(mGame,mGameBoard));
+	BoardActor* playerTwo = new HumanPlayer(mGame,mGameBoard);
+	mRoundMachine = new RoundMachine(mGame,mGameBoard, new PlaceRound(mGame,mGameBoard,PLAYER_1),mActor,playerTwo);
 	mRoundMachine->InitMachine();
 
 	//mGame->GetInput()->AddMouseListener((HumanPlayer*)mActor);

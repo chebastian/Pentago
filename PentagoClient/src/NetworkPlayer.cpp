@@ -28,13 +28,6 @@ void NetworkPlayer::end()
 
 void NetworkPlayer::update(const float& time)
 {
-	//ClientMessage msg = mGame->PlayerClient()->GetLatestPacketFromServer();		
-	/*if(mGame->PlayerClient()->hasNewMessage())
-	{
-		ClientMessage msg = mGame->PlayerClient()->GetLatestPacketFromServer();
-		msg = msg;
-		SendClientMessage(&msg);
-	}*/
 }	
 
 void NetworkPlayer::AddMessage(SFMessage* msg)
@@ -51,23 +44,19 @@ void NetworkPlayer::ProcessMessage(SFMessage* msg)
 
 	std::cout << "Recv: msg" << cmsg->message << std::endl;
 
-	if(cmsg->id == SERVER_ID && cmsg->MsgType == ClientMessage::TYPE_SETUP_GAME)
+	/*if(cmsg->id == SERVER_ID && cmsg->MsgType == ClientMessage::TYPE_SETUP_GAME)
 	{
 		ActorName = std::string("Player");
 		ActorName += (char)cmsg->message;
 
 		std::cout << "Recv: setup" << std::endl;
 		mMyTurn = true;
-	}
-
-	if(cmsg->id == SERVER_ID && cmsg->MsgType == ClientMessage::TYPE_NEXT)
-		mMyTurn = !mMyTurn;
-	//SendClientMessage(cmsg);
+	}*/
 }
 
 void NetworkPlayer::SendClientMessage(ClientMessage* msg)
 {
-	if(mMyTurn)
+	//if(mMyTurn)
 		BoardActor::SendClientMessage(msg);
 }
 

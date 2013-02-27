@@ -173,7 +173,7 @@ void ClientPlayer::SendMessageToListeners(ClientMessage msg)
 	{
 		std::cout << "GAME SETUP";
 		this->mFoundPartner = true;
-		mServerID = msg.message;
+		mPlayerID = msg.message;
 	}
 }
 
