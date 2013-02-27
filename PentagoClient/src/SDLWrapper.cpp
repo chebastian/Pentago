@@ -47,7 +47,7 @@ void SDLWrapper::RenderString(const std::string& str, int x, int y, int incolor)
 	{
 		if(TTF_Init() != -1)
 		{
-				mFontTTF = TTF_OpenFont("../media/fonts/ProFontWindows.ttf",16);
+				mFontTTF = TTF_OpenFont("../../media/fonts/arial.ttf",16);
 		}
 	}
 
