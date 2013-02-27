@@ -9,6 +9,7 @@
 #include "RotateRound.h"
 #include "NetworkPlayer.h"
 #include "HumanPlayer.h"
+#include "NetworkListenerActor.h"
 
 PlayState::PlayState(PentagoBase* base)
 	:GameState(base )
@@ -31,21 +32,37 @@ void PlayState::OnEnter()
 	mGameBoard = new GameBoard();
 	mGameBoard->initBoard();
 
-	NetworkPlayer* nw = new NetworkPlayer(mGame,mGameBoard);
+	setupPlayers();
+
+	//NetworkPlayer* nw = new NetworkPlayer(mGame,mGameBoard);
 	//HumanPlayer* hp = new HumanPlayer(mGame,mGameBoard);
-	mGame->GetInput()->AddMouseListener(nw);
+	//mGame->GetInput()->AddMouseListener(nw);
 	
 	PlaceRound* round = new PlaceRound(mGame,mGameBoard,PLAYER_1);
 	//RotateRound* rotRound = new RotateRound(mGame,mGameBoard,PLAYER_1);
 	//mGame->PlayerClient()->addServerMessageListener(round);
-	mGame->PlayerClient()->addServerMessageListener(nw);
-	//nw->AddReceiver(round);
-	//nw->AddReceiver(mGame->PlayerClient());
-
-	mRoundMachine = new RoundMachine(mGame,mGameBoard,round,nw);
-	//mRoundMachine->AddRound(rotRound);
-	mRoundMachine->AddPlayer(nw);
+	//NetworkListenerActor* nwListener = new NetworkListenerActor(mGame,mGameBoard);
+	
+	mGame->PlayerClient()->addServerMessageListener(mPlayerOne);
+	mGame->PlayerClient()->addServerMessageListener(mPlayerTwo);
+	mRoundMachine = new RoundMachine(mGame,mGameBoard,round,mPlayerOne,mPlayerTwo);
 	mRoundMachine->InitMachine();
+}
+
+void PlayState::setupPlayers()
+{
+	if(mGame->PlayerClient()->IsPlayerOne())
+	{
+		mPlayerOne = new NetworkPlayer(mGame,mGameBoard);
+		mPlayerTwo = new NetworkListenerActor(mGame,mGameBoard);
+		mGame->GetInput()->AddMouseListener(mPlayerOne);
+	}
+	else
+	{
+		mPlayerOne = new NetworkListenerActor(mGame,mGameBoard);
+		mPlayerTwo = new NetworkPlayer(mGame,mGameBoard);
+		mGame->GetInput()->AddMouseListener(mPlayerTwo);
+	}
 }
 
 void PlayState::Update(const float& time)

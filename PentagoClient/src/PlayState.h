@@ -6,6 +6,7 @@
 class Entity;
 class Board;
 class GameBoard;
+class NetworkPlayer;
 
 class PlayState :
 	public GameState, public IKeyboardListener
@@ -27,10 +28,12 @@ public:
 	virtual const int& KeyListenerId();
 
 protected:
+	void setupPlayers();
 
 	Entity* mEntity;
 	std::string mMsg;
 	GameBoard* mGameBoard;
 	RoundMachine* mRoundMachine;
+	NetworkPlayer* mPlayerOne, *mPlayerTwo;
 };
 

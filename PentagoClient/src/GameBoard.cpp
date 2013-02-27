@@ -23,7 +23,7 @@ GameBoard::~GameBoard(void)
 
 void GameBoard::initGraphics()
 {
-	mBoardSprite = SDL_LoadBMP("../media/textures/stones.bmp");
+	mBoardSprite = SDL_LoadBMP("../../media/textures/stones.bmp");
 	mBoardSprite = mBoardSprite;
 
 	

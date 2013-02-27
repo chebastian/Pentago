@@ -42,6 +42,10 @@ void PentagoBase::ChangeState(GameState* state)
 	mGameStateMgr->ChangeState(state);
 }
 
+void PentagoBase::resetCurrentGameRound()
+{
+}
+
 void PentagoBase::OnKeyClicked(KeyEvent& evt)
 {
 	

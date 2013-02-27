@@ -15,10 +15,10 @@ class RoundMachine
 {
 public:
 
-	RoundMachine(PentagoBase* base, GameBoard* board, GameRound* start, BoardActor* actor)
+	RoundMachine(PentagoBase* base, GameBoard* board, GameRound* start, BoardActor* first, BoardActor* second)
 	{
 		mCurrentRound = start;
-		mCurrentActor = actor;
+		mCurrentActor = first;
 		//mGame->GetInput()->AddMouseListener(mCurrentRound);
 		mCurrentRound->OnEnter();
 		mCurrentActor->AddReceiver(start);
@@ -28,6 +28,7 @@ public:
 		mGame = base;
 		mBoard = board;
 		mCurrentPlayer = PLAYER_1;
+		AddPlayer(second);
 	}
 
 	void AddPlayer(BoardActor* actor)
@@ -48,10 +49,10 @@ public:
 	{
 		mCurrentActor->start();
 		AddRound(new PlaceRound(mGame,mBoard,mCurrentPlayer));
-		//AddRound(new WinRound(mGame,mBoard,mCurrentPlayer));
+		AddRound(new WinRound(mGame,mBoard,mCurrentPlayer));
 		AddRound(new RotateRound(mGame,mBoard,mCurrentPlayer));
-		//AddRound(new WinRound(mGame,mBoard,PLAYER_1));
-		//AddRound(new WinRound(mGame,mBoard,PLAYER_2));
+		AddRound(new WinRound(mGame,mBoard,PLAYER_1));
+		AddRound(new WinRound(mGame,mBoard,PLAYER_2));
 	}
 
 	void AddRound(GameRound* round)

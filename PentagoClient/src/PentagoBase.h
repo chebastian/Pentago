@@ -16,6 +16,7 @@ public:
 	bool updateGameSystem();
 	void render();
 
+	void resetCurrentGameRound();
 	void ChangeState(GameState* state);
 
 	virtual void OnKeyClicked(KeyEvent& evt);

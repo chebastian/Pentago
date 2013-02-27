@@ -3,6 +3,9 @@
 #include "IMessageReceiver.h"
 #include "IMessageSender.h"
 
+#define PLAYER_ONE 0
+#define PLAYER_TWO 1
+
 class ClientPlayer :
 	public ClientBase, public IMessageReceiver
 {
@@ -21,6 +24,11 @@ public:
 
 	void addServerMessageListener(IMessageReceiver* recv);
 	void HandleIncomingMessageFromServer(ClientMessage msg);
+
+	const bool IsPlayerOne()
+	{
+		return mPlayerID == PLAYER_ONE;
+	}
 	
 	const bool PartnerFound()
 	{
@@ -46,7 +54,7 @@ protected:
 	ClientMessage mLatestPacket;
 	bool mHasNewMessage;
 	bool mLatestMessageRead;
-	int mServerID;
+	int mPlayerID;
 	std::vector<IMessageReceiver*> mListeners;
 };
 
